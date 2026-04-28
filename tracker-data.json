@@ -1,5 +1,125 @@
 {
   "version": 1,
-  "updatedAt": null,
-  "teams": {}
+  "updatedAt": "2026-04-28T01:50:48.503Z",
+  "teams": {
+    "alpha": {
+      "team": "Alpha Soccer Academy",
+      "tryoutDates": "May 4-7, 2026",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "barca": {
+      "team": "Barça Academy Carolinas",
+      "tryoutDates": "Apr 27-30, 2026 (Central Matthews)",
+      "teamDecision": "tried out",
+      "playerDecision": "interested",
+      "notes": ""
+    },
+    "castely": {
+      "team": "Castely Soccer Academy",
+      "tryoutDates": "Not found",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "eagles": {
+      "team": "Charlotte Eagles SC (CESC)",
+      "tryoutDates": "May 11 and May 13, 2026",
+      "teamDecision": "",
+      "playerDecision": "interested",
+      "notes": ""
+    },
+    "cisc": {
+      "team": "Charlotte Independence SC",
+      "tryoutDates": "May 5, 7, 18, 20, 21, 2026 (location specific)",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "metro": {
+      "team": "Charlotte Metro FC",
+      "tryoutDates": "May 11-12, 2026",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "rise": {
+      "team": "Charlotte Rise FC",
+      "tryoutDates": "Apr 28, Apr 30, May 5, May 7, May 12, May 14, 2026",
+      "teamDecision": "tried out",
+      "playerDecision": "declined",
+      "notes": ""
+    },
+    "fortmill": {
+      "team": "Fort Mill United FC",
+      "tryoutDates": "2026/27 schedule posted (check link)",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "land": {
+      "team": "Land United FC",
+      "tryoutDates": "May 2 and May 11, 2026",
+      "teamDecision": "invited",
+      "playerDecision": "interested",
+      "notes": ""
+    },
+    "lfc": {
+      "team": "LFC IA Carolinas",
+      "tryoutDates": "Not published yet (new club)",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "matrix": {
+      "team": "MatriX FC",
+      "tryoutDates": "Not found publicly",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "mavericks": {
+      "team": "Mavericks FC",
+      "tryoutDates": "Apr 27 and May 4, 2026",
+      "teamDecision": "",
+      "playerDecision": "interested",
+      "notes": ""
+    },
+    "praa": {
+      "team": "Porter Ridge / PRAA",
+      "tryoutDates": "May 19-20, 2026",
+      "teamDecision": "",
+      "playerDecision": "interested",
+      "notes": ""
+    },
+    "qcm": {
+      "team": "Queen City Mutiny FC",
+      "tryoutDates": "2026/27 tryouts open (TBD schedule)",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "sporting": {
+      "team": "Sporting Charlotte FC",
+      "tryoutDates": "Not listed yet",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "unfc": {
+      "team": "UNFC",
+      "tryoutDates": "Not confirmed",
+      "teamDecision": "",
+      "playerDecision": "",
+      "notes": ""
+    },
+    "waa": {
+      "team": "Waxhaw Athletic Association (WAA)",
+      "tryoutDates": "May 18 and May 19, 2026 (5:30 PM - 7:00 PM, Nesbit Field 8)",
+      "teamDecision": "invited",
+      "playerDecision": "interested",
+      "notes": ""
+    }
+  }
 }

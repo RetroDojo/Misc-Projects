@@ -1850,7 +1850,7 @@
     <div class="card-header">Tryout Feedback &amp; Decision Tracker <span class="sub">Editable. Saved data is kept in your browser so future code edits do not overwrite your entries.</span></div>
     <div class="card-body">
       <div style="font-size:.82rem;color:#4b5563;margin-bottom:10px;">
-        Edit any field below. Use <strong>Save Tracker</strong> to keep updates in your browser and <strong>Save Updates to File</strong> to download a JSON backup file.
+        Edit any field below. Use <strong>Save Tracker</strong> to keep updates in your browser. Use <strong>Publish</strong> to push your edits live so anyone with the link sees them.
       </div>
       <div class="tracker-wrap">
         <table class="summary-table tracker-table">
@@ -2277,8 +2277,9 @@
       </div>
       <div class="tracker-actions">
         <button type="button" class="tracker-btn" onclick="saveTryoutTracker()">Save Tracker</button>
-        <button type="button" class="tracker-btn secondary" onclick="saveTryoutTrackerToFile()">Save Updates to File</button>
-        <button type="button" class="tracker-btn secondary" onclick="triggerTryoutTrackerImport()">Import Updates File</button>
+        <button type="button" class="tracker-btn" style="background:#16a34a" onclick="publishTrackerToGitHub()">Publish</button>
+        <button type="button" class="tracker-btn secondary" onclick="saveTryoutTrackerToFile()">Export JSON</button>
+        <button type="button" class="tracker-btn secondary" onclick="triggerTryoutTrackerImport()">Import JSON</button>
         <input type="file" id="tryout-tracker-import-file" accept="application/json,.json" style="display:none" onchange="importTryoutTrackerFile(event)" />
         <span class="tracker-status" id="tryout-tracker-status">No unsaved changes.</span>
       </div>
@@ -3144,6 +3145,10 @@
 <script>
   var TRYOUT_TRACKER_STORAGE_KEY = 'ccl_tryout_tracker_v1';
 
+  var GITHUB_REPO = 'RetroDojo/Misc-Projects';
+  var TRACKER_FILE = 'tracker-data.json';
+  var GITHUB_PAT_KEY = 'ccl_github_pat';
+
   var CLUB_NAME_MAP = {
     alpha: 'Alpha Soccer Academy',
     barca: 'Barca Academy Carolinas',
@@ -3404,17 +3409,66 @@
     reader.readAsText(file);
   }
 
+  function fetchPublishedTrackerData() {
+    var url = 'https://raw.githubusercontent.com/' + GITHUB_REPO + '/main/' + TRACKER_FILE + '?t=' + Date.now();
+    return fetch(url).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+  }
+
+  function publishTrackerToGitHub() {
+    var pat = localStorage.getItem(GITHUB_PAT_KEY);
+    if (!pat) {
+      pat = prompt('Enter your GitHub Personal Access Token (stored in this browser only):');
+      if (!pat) return;
+      localStorage.setItem(GITHUB_PAT_KEY, pat.trim());
+    }
+    setTryoutTrackerStatus('Publishing...');
+    var payload = serializeTryoutTracker();
+    var content = btoa(unescape(encodeURIComponent(JSON.stringify(payload, null, 2))));
+    var apiUrl = 'https://api.github.com/repos/' + GITHUB_REPO + '/contents/' + TRACKER_FILE;
+    fetch(apiUrl, { headers: { Authorization: 'token ' + pat, Accept: 'application/vnd.github+json' } })
+      .then(function(r) { return r.json(); })
+      .then(function(file) {
+        return fetch(apiUrl, {
+          method: 'PUT',
+          headers: { Authorization: 'token ' + pat, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: 'data: update tracker (' + new Date().toLocaleDateString() + ')', content: content, sha: file.sha })
+        });
+      })
+      .then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function() {
+        saveTryoutTracker();
+        setTryoutTrackerStatus('Published! Live in ~1 minute.');
+      })
+      .catch(function(err) {
+        console.error('Publish failed:', err);
+        if (String(err).indexOf('401') > -1 || String(err).indexOf('403') > -1) {
+          localStorage.removeItem(GITHUB_PAT_KEY);
+          setTryoutTrackerStatus('Auth failed — token cleared. Click Publish to re-enter.');
+        } else {
+          setTryoutTrackerStatus('Publish failed: ' + err.message);
+        }
+      });
+  }
+
   function initTryoutTracker() {
     var rows = readTryoutTrackerRows();
     if (!rows.length) return;
 
-    try {
-      var saved = localStorage.getItem(TRYOUT_TRACKER_STORAGE_KEY);
-      if (saved) applyTryoutTrackerData(JSON.parse(saved));
-    } catch (err) {
-      console.warn('Could not load saved tryout tracker data:', err);
-      setTryoutTrackerStatus('Could not load saved tracker data.');
-    }
+    // Fetch published defaults from GitHub, then overlay localStorage
+    fetchPublishedTrackerData().then(function(published) {
+      if (published) applyTryoutTrackerData(published);
+      try {
+        var saved = localStorage.getItem(TRYOUT_TRACKER_STORAGE_KEY);
+        if (saved) applyTryoutTrackerData(JSON.parse(saved));
+      } catch (err) {
+        console.warn('Could not load saved tryout tracker data:', err);
+        setTryoutTrackerStatus('Could not load saved tracker data.');
+      }
+      setTryoutTrackerStatus('No unsaved changes.');
+    });
 
     rows.forEach(function(row) {
       row.querySelectorAll('input, select, textarea').forEach(function(input) {
